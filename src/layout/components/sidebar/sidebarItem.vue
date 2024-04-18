@@ -6,6 +6,7 @@ import { menuType } from "../../types";
 import extraIcon from "./extraIcon.vue";
 import { ReText } from "@/components/ReText";
 import { useNav } from "@/layout/hooks/useNav";
+import { transformI18n } from "@/plugins/i18n";
 import { useRenderIcon } from "@/components/ReIcon/src/hooks";
 import {
   type PropType,
@@ -146,7 +147,7 @@ function resolvePath(routePath) {
         truncated
         class="!px-4 !text-inherit"
       >
-        {{ onlyOneChild.meta.title }}
+        {{ transformI18n(onlyOneChild.meta.title) }}
       </el-text>
 
       <template #title>
@@ -158,7 +159,7 @@ function resolvePath(routePath) {
             }"
             class="!text-inherit"
           >
-            {{ onlyOneChild.meta.title }}
+            {{ transformI18n(onlyOneChild.meta.title) }}
           </ReText>
           <extraIcon :extraIcon="onlyOneChild.meta.extraIcon" />
         </div>
@@ -204,7 +205,7 @@ function resolvePath(routePath) {
             props.item.parentId === null
         }"
       >
-        {{ props.item.meta.title }}
+        {{ transformI18n(props.item.meta.title) }}
       </ReText>
       <extraIcon v-if="!isCollapse" :extraIcon="props.item.meta.extraIcon" />
     </template>

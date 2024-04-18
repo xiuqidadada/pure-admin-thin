@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { $t } from "@/plugins/i18n";
 import { emitter } from "@/utils/mitt";
 import { RouteConfigs } from "../../types";
 import { useTags } from "../../hooks/useTag";
@@ -47,6 +48,7 @@ const {
   onMounted,
   onMouseenter,
   onMouseleave,
+  transformI18n,
   onContentFullScreen
 } = useTags();
 
@@ -331,10 +333,10 @@ function onClickDrop(key, item, selectRoute?: RouteConfigs) {
       setTimeout(() => {
         if (pureSetting.hiddenSideBar) {
           tagsViews[6].icon = ExitFullscreen;
-          tagsViews[6].text = "内容区退出全屏";
+          tagsViews[6].text = $t("buttons.pureContentExitFullScreen");
         } else {
           tagsViews[6].icon = Fullscreen;
-          tagsViews[6].text = "内容区全屏";
+          tagsViews[6].text = $t("buttons.pureContentFullScreen");
         }
       }, 100);
       break;
@@ -556,7 +558,7 @@ onBeforeUnmount(() => {
           <span
             class="tag-title dark:!text-text_color_primary dark:hover:!text-primary"
           >
-            {{ item.meta.title }}
+            {{ transformI18n(item.meta.title) }}
           </span>
           <span
             v-if="
@@ -595,7 +597,7 @@ onBeforeUnmount(() => {
         >
           <li v-if="item.show" @click="selectTag(key, item)">
             <IconifyIconOffline :icon="item.icon" />
-            {{ item.text }}
+            {{ transformI18n(item.text) }}
           </li>
         </div>
       </ul>
@@ -619,7 +621,7 @@ onBeforeUnmount(() => {
             :disabled="item.disabled"
           >
             <IconifyIconOffline :icon="item.icon" />
-            {{ item.text }}
+            {{ transformI18n(item.text) }}
           </el-dropdown-item>
         </el-dropdown-menu>
       </template>

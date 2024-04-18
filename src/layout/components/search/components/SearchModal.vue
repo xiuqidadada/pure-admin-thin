@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import { match } from "pinyin-pro";
+import { useI18n } from "vue-i18n";
 import { getConfig } from "@/config";
 import { useRouter } from "vue-router";
 import SearchResult from "./SearchResult.vue";
 import SearchFooter from "./SearchFooter.vue";
 import { useNav } from "@/layout/hooks/useNav";
+import { transformI18n } from "@/plugins/i18n";
 import SearchHistory from "./SearchHistory.vue";
 import type { optionsItem, dragItem } from "../types";
 import { ref, computed, shallowRef, watch } from "vue";
@@ -27,6 +29,7 @@ const emit = defineEmits<Emits>();
 const props = withDefaults(defineProps<Props>(), {});
 
 const router = useRouter();
+const { locale } = useI18n();
 
 const HISTORY_TYPE = "history";
 const COLLECT_TYPE = "collect";
@@ -107,15 +110,16 @@ function search() {
   const flatMenusData = flatTree(menusData.value);
   resultOptions.value = flatMenusData.filter(menu =>
     keyword.value
-      ? menu.meta?.title
+      ? transformI18n(menu.meta?.title)
           .toLocaleLowerCase()
           .includes(keyword.value.toLocaleLowerCase().trim()) ||
-        !isAllEmpty(
-          match(
-            menu.meta?.title.toLocaleLowerCase(),
-            keyword.value.toLocaleLowerCase().trim()
-          )
-        )
+        (locale.value === "zh" &&
+          !isAllEmpty(
+            match(
+              transformI18n(menu.meta?.title).toLocaleLowerCase(),
+              keyword.value.toLocaleLowerCase().trim()
+            )
+          ))
       : false
   );
   activePath.value =
@@ -289,7 +293,7 @@ onKeyStroke("ArrowDown", handleDown);
       v-model="keyword"
       size="large"
       clearable
-      placeholder="搜索菜单（支持拼音搜索）"
+      placeholder="搜索菜单（中文模式下支持拼音搜索）"
       @input="handleSearch"
     >
       <template #prefix>
